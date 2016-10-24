@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public GameObject cursor;
+
 	public int forceMultiplier;
 
 	Rigidbody2D rBody;
@@ -17,6 +19,11 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		// Get the look at rotation between positions of player and cursor using up as a pivot
+		Quaternion rotation = Quaternion.LookRotation (cursor.transform.position - transform.position,
+			transform.TransformDirection(Vector3.up));
+		// rotate around z
+		transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
 	}
 	// for physics stuff, set interval updating
 	void FixedUpdate()
