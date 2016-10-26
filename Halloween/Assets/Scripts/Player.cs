@@ -4,7 +4,6 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	public GameObject cursor;
-	GameObject vacuum;
 
 	public int forceMultiplier;
 
@@ -15,8 +14,7 @@ public class Player : MonoBehaviour {
 	void Start () 
 	{
 		rBody = GetComponent<Rigidbody2D>();
-		vacuum = transform.Find("Vacuum").gameObject;
-		//vacuum.SetActive(false);
+
 	}
 	
 	// Update is called once per frame
@@ -27,8 +25,6 @@ public class Player : MonoBehaviour {
 			transform.TransformDirection(Vector3.up));
 		// rotate around z
 		transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
-
-		vacuum.SetActive(Input.GetMouseButton(0));
 	}
 	// for physics stuff, set interval updating
 	void FixedUpdate()

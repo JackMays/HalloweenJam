@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
+	Score scoreboard;
+
 	GameObject player;
 
 	Vector3 startPosition;
@@ -17,6 +19,8 @@ public class Enemy : MonoBehaviour {
 	// the current state of the time during the lerp
 	float currentLerpTime = 0.0f;
 
+	int killScore = 200;
+
 
 
 	bool isVacuum = false;
@@ -24,6 +28,7 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		scoreboard = GameObject.FindGameObjectWithTag("Score").GetComponent<Score>();
 		player = GameObject.FindGameObjectWithTag("Player");
 
 		targetlerpTime = brotherLerp;
@@ -77,6 +82,15 @@ public class Enemy : MonoBehaviour {
 		if (coll.gameObject.CompareTag("Brother") || (coll.gameObject.CompareTag("Player") && isVacuum))
 		{
 			Destroy(gameObject);
+
+			if (coll.gameObject.CompareTag("Brother"))
+			{
+				coll.gameObject.GetComponent<Brother>().EnemyHit();
+			}
+			else if (coll.gameObject.CompareTag("Player") && isVacuum)
+			{
+				scoreboard.AddScore(killScore);
+			}
 		}
 
 
@@ -88,15 +102,33 @@ public class Enemy : MonoBehaviour {
 
 	}*/
 
-	void OnTriggerEnter2D(Collider2D coll)
+	void OnTriggerStay2D(Collider2D coll)
 	{
 		if (coll.gameObject.CompareTag("Vacuum"))
 		{
-			Debug.Log("vacuum hit");
-			isVacuum = true;
-			targetlerpTime = vacuumLerp;
-			currentLerpTime = 0.0f;
-			startPosition = transform.position;
+
+			if (coll.gameObject.GetComponent<Vacuum>().HasVacuumActivated())
+			{
+				if (!isVacuum)
+				{
+					Debug.Log("vacuum hit");
+					isVacuum = true;
+					targetlerpTime = vacuumLerp;
+					currentLerpTime = 0.0f;
+					startPosition = transform.position;
+				}
+			}
+			else
+			{
+				if (isVacuum)
+				{
+					Debug.Log("vacuum off");
+					isVacuum = false;
+					targetlerpTime = brotherLerp;
+					currentLerpTime = 0.0f;
+					startPosition = transform.position;
+				}
+			}
 		}
 	}
 
@@ -106,11 +138,14 @@ public class Enemy : MonoBehaviour {
 
 		if (coll.gameObject.CompareTag("Vacuum"))
 		{
-			Debug.Log("vacuum off");
-			isVacuum = false;
-			targetlerpTime = brotherLerp;
-			currentLerpTime = 0.0f;
-			startPosition = transform.position;
+			if (isVacuum)
+			{
+				Debug.Log("vacuum off");
+				isVacuum = false;
+				targetlerpTime = brotherLerp;
+				currentLerpTime = 0.0f;
+				startPosition = transform.position;
+			}
 		}
 	}
 
