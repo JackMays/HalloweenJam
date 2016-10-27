@@ -4,6 +4,8 @@ using System.Collections;
 
 public class Timer : MonoBehaviour {
 
+	SpeedManager speed;
+
 	Text timerText;
 
 	float microSeconds = 0.0f;
@@ -12,9 +14,14 @@ public class Timer : MonoBehaviour {
 
 	int minutes = 0;
 
+	int speedUpInterval = 10;
+
+	int speedUpIncrement = 0;
+
 	// Use this for initialization
 	void Start () 
 	{
+		speed = GameObject.FindGameObjectWithTag("Speed").GetComponent<SpeedManager>();
 		timerText = GetComponent<Text>();
 	}
 	
@@ -26,12 +33,22 @@ public class Timer : MonoBehaviour {
 		if (microSeconds >= 1)
 		{
 			++seconds;
+			++speedUpIncrement;
 			microSeconds = 0.0f;
+		}
+
+		if (speedUpIncrement >= speedUpInterval)
+		{
+			speed.SpeedUp();
+			speedUpIncrement = 0;
+
+			Debug.Log("speed = interval");
 		}
 
 		if (seconds >= 60)
 		{
 			++minutes;
+			seconds = 0;
 		}
 
 		if (minutes < 10)

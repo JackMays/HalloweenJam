@@ -4,6 +4,7 @@ using System.Collections;
 public class Enemy : MonoBehaviour {
 
 	Score scoreboard;
+	SpeedManager speed;
 
 	GameObject player;
 
@@ -11,8 +12,8 @@ public class Enemy : MonoBehaviour {
 	Vector3 brotherPosition;
 	Vector3 playerPosition = Vector3.zero;
 
-	float brotherLerp = 10.0f;
-	float vacuumLerp = 2.0f;
+	float brotherLerp = 0.0f;
+	float vacuumLerp = 0.0f;
 
 	// the time the lerp will take
 	float targetlerpTime = 0.0f;
@@ -21,15 +22,18 @@ public class Enemy : MonoBehaviour {
 
 	int killScore = 200;
 
-
-
 	bool isVacuum = false;
 
 	// Use this for initialization
 	void Start () 
 	{
 		scoreboard = GameObject.FindGameObjectWithTag("Score").GetComponent<Score>();
+		speed = GameObject.FindGameObjectWithTag("Speed").GetComponent<SpeedManager>();
+
 		player = GameObject.FindGameObjectWithTag("Player");
+
+		brotherLerp = speed.GetBrotherLerp();
+		vacuumLerp = speed.GetVacuumLerp();
 
 		targetlerpTime = brotherLerp;
 
@@ -40,6 +44,20 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		if (brotherLerp != speed.GetBrotherLerp())
+		{
+			brotherLerp = speed.GetBrotherLerp();
+			ResetLerp(brotherLerp);
+
+		}
+
+		if (vacuumLerp != speed.GetVacuumLerp())
+		{
+			vacuumLerp = speed.GetVacuumLerp();
+			ResetLerp(vacuumLerp);
+
+		}
+
 		// add to the current time in the lerp
 		currentLerpTime += Time.deltaTime;
 
@@ -75,6 +93,13 @@ public class Enemy : MonoBehaviour {
 			}
 		}
 
+	}
+
+	void ResetLerp(float lerp)
+	{
+		targetlerpTime = lerp;
+		currentLerpTime = 0.0f;
+		startPosition = transform.position;
 	}
 
 	void OnCollisionEnter2D(Collision2D coll)
@@ -113,9 +138,7 @@ public class Enemy : MonoBehaviour {
 				{
 					Debug.Log("vacuum hit");
 					isVacuum = true;
-					targetlerpTime = vacuumLerp;
-					currentLerpTime = 0.0f;
-					startPosition = transform.position;
+					ResetLerp(vacuumLerp);
 				}
 			}
 			else
@@ -124,9 +147,7 @@ public class Enemy : MonoBehaviour {
 				{
 					Debug.Log("vacuum off");
 					isVacuum = false;
-					targetlerpTime = brotherLerp;
-					currentLerpTime = 0.0f;
-					startPosition = transform.position;
+					ResetLerp(brotherLerp);
 				}
 			}
 		}

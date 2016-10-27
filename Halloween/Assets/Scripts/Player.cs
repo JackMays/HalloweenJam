@@ -5,7 +5,9 @@ public class Player : MonoBehaviour {
 
 	public GameObject cursor;
 
-	public int forceMultiplier;
+	SpeedManager speed;
+
+	int forceMultiplier = 0;
 
 	Rigidbody2D rBody;
 
@@ -13,13 +15,22 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		speed = GameObject.FindGameObjectWithTag("Speed").GetComponent<SpeedManager>();
+
 		rBody = GetComponent<Rigidbody2D>();
+
+		forceMultiplier = speed.GetForceMultiplier();
 
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		if (forceMultiplier != speed.GetForceMultiplier())
+		{
+			forceMultiplier = speed.GetForceMultiplier();
+		}
+
 		// Get the look at rotation between positions of player and cursor using up as a pivot
 		Quaternion rotation = Quaternion.LookRotation (cursor.transform.position - transform.position,
 			transform.TransformDirection(Vector3.up));
