@@ -26,4 +26,9 @@ public class Score : MonoBehaviour {
 	{
 		currentScore += score;
 	}
+
+	public string GetScore()
+	{
+		return currentScore.ToString();
+	}
 }

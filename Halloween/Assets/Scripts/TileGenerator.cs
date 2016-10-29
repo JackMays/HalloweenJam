@@ -6,8 +6,11 @@ public class TileGenerator : MonoBehaviour {
 
 	public GameObject baseTile;
 
+	GameObject spawner;
+
 	List<GameObject> wallTiles = new List<GameObject>();
 	List<GameObject> floorTiles = new List<GameObject>();
+	List<GameObject> spawnTiles = new List<GameObject>();
 
 	Vector2 tilePosition;
 
@@ -19,9 +22,13 @@ public class TileGenerator : MonoBehaviour {
 
 	int tileNo = 1;
 
+	int spawnNo = 4;
+
 	// Use this for initialization
 	void Start () 
 	{
+		spawner = Resources.Load("Prefabs/Spawner") as GameObject;
+
 		tilePosition = baseTile.transform.position;
 
 		defaultX = tilePosition.x;
@@ -88,5 +95,33 @@ public class TileGenerator : MonoBehaviour {
 		}
 
 		Destroy(baseTile);
+
+		AddSpawners();
+	}
+
+	void AddSpawners()
+	{
+		int currentSpawnCount = 1;
+
+		List<GameObject> tempWallTiles = new List<GameObject>();
+
+		for (int i = 0; i < wallTiles.Count; ++i)
+		{
+			tempWallTiles.Add(wallTiles[i]);
+		}
+
+		while (currentSpawnCount <= spawnNo)
+		{
+			int randWall = Random.Range(0, tempWallTiles.Count);
+			GameObject wall = tempWallTiles[randWall];
+
+			GameObject spawnPrefab = Instantiate(spawner, wall.transform.position, Quaternion.identity) as GameObject;
+
+			spawnPrefab.name = "Spawner " + currentSpawnCount;
+
+			tempWallTiles.RemoveAt(randWall);
+
+			++currentSpawnCount;
+		}
 	}
 }

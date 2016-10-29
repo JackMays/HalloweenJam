@@ -102,7 +102,7 @@ public class Enemy : MonoBehaviour {
 		startPosition = transform.position;
 	}
 
-	void OnCollisionEnter2D(Collision2D coll)
+	void OnTriggerEnter2D(Collider2D coll)
 	{
 		if (coll.gameObject.CompareTag("Brother") || (coll.gameObject.CompareTag("Player") && isVacuum))
 		{
@@ -155,7 +155,6 @@ public class Enemy : MonoBehaviour {
 
 	void OnTriggerExit2D(Collider2D coll)
 	{
-		Debug.Log(coll.gameObject.tag);
 
 		if (coll.gameObject.CompareTag("Vacuum"))
 		{

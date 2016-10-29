@@ -18,6 +18,8 @@ public class Timer : MonoBehaviour {
 
 	int speedUpIncrement = 0;
 
+	bool isTiming = true;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -28,47 +30,61 @@ public class Timer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		microSeconds += Time.deltaTime;
 
-		if (microSeconds >= 1)
+		if (isTiming)
 		{
-			++seconds;
-			++speedUpIncrement;
-			microSeconds = 0.0f;
+			microSeconds += Time.deltaTime;
+
+			if (microSeconds >= 1)
+			{
+				++seconds;
+				++speedUpIncrement;
+				microSeconds = 0.0f;
+			}
+
+			if (speedUpIncrement >= speedUpInterval)
+			{
+				speed.SpeedUp();
+				speedUpIncrement = 0;
+
+				Debug.Log("speed = interval");
+			}
+
+			if (seconds >= 60)
+			{
+				++minutes;
+				seconds = 0;
+			}
+
+			if (minutes < 10)
+			{
+				timerText.text = "0" + minutes + ":";
+			}
+			else
+			{
+				timerText.text = minutes + ":";
+			}
+
+			if (seconds < 10)
+			{
+				timerText.text += "0" + seconds;
+			}
+			else
+			{
+				timerText.text += seconds;
+			}
 		}
 
-		if (speedUpIncrement >= speedUpInterval)
-		{
-			speed.SpeedUp();
-			speedUpIncrement = 0;
 
-			Debug.Log("speed = interval");
-		}
+	}
 
-		if (seconds >= 60)
-		{
-			++minutes;
-			seconds = 0;
-		}
+	public void StopTimer()
+	{
+		isTiming = false;
+	}
 
-		if (minutes < 10)
-		{
-			timerText.text = "0" + minutes + ":";
-		}
-		else
-		{
-			timerText.text = minutes + ":";
-		}
-
-		if (seconds < 10)
-		{
-			timerText.text += "0" + seconds;
-		}
-		else
-		{
-			timerText.text += seconds;
-		}
-
-
+	public string GetTime()
+	{
+		return timerText.text;
 	}
 }
