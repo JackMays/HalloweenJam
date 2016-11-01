@@ -151,6 +151,22 @@ public class Enemy : MonoBehaviour {
 				}
 			}
 		}
+
+		// extra check on stay if something goes wrong in enter
+
+		if (coll.gameObject.CompareTag("Brother") || (coll.gameObject.CompareTag("Player") && isVacuum))
+		{
+			Destroy(gameObject);
+
+			if (coll.gameObject.CompareTag("Brother"))
+			{
+				coll.gameObject.GetComponent<Brother>().EnemyHit();
+			}
+			else if (coll.gameObject.CompareTag("Player") && isVacuum)
+			{
+				scoreboard.AddScore(killScore);
+			}
+		}
 	}
 
 	void OnTriggerExit2D(Collider2D coll)

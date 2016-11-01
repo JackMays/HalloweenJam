@@ -5,7 +5,7 @@ public class SpeedManager : MonoBehaviour {
 
 	int playerForceMultiplier = 1800;
 	float enemyBrotherLerp = 10.0f;
-	float enemyVacuumLerp = 5.0f;
+	float enemyVacuumLerp = 1.0f;
 
 	float speedIncrement = 2.0f;
 
